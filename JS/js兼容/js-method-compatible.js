@@ -46,7 +46,7 @@
 
   // 数组includes方法兼容
   !Array.prototype.includes && (Array.prototype.includes = function (targetEle) {
-    return this.indexOf(targetEle) > 0 ? true : false;
+    return Array.prototype.indexOf.call(this,targetEle) > 0 ? true : false;
   })
 
 
