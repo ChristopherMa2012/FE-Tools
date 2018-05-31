@@ -1,3 +1,9 @@
+/*
+ * @Author: chris 
+ * @Date: 2018-05-31 19:59:15 
+ * @Last Modified by:   chris 
+ * @Last Modified time: 2018-05-31 19:59:15 
+ */
 (function (window, document) {
   window.tagsStr = 'html,head,body,title,meta,style,script,link,div,span,img,a,abbr,acronym,'
     + 'applet,address,area,article,aside,audio,b,base,basefont,bdi,bdo,big,'

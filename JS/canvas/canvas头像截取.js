@@ -1,3 +1,9 @@
+/*
+ * @Author: chris 
+ * @Date: 2018-05-31 19:58:38 
+ * @Last Modified by:   chris 
+ * @Last Modified time: 2018-05-31 19:58:38 
+ */
 //input标签的改变事件
 function BindHeadChange() {
     $("[name=headImg]").change(function() {

@@ -1,3 +1,9 @@
+/*
+ * @Author: chris 
+ * @Date: 2018-05-31 19:59:27 
+ * @Last Modified by:   chris 
+ * @Last Modified time: 2018-05-31 19:59:27 
+ */
 (function (window, document) {
   // 数组去重
   Array.prototype.removDuplicate = function () {

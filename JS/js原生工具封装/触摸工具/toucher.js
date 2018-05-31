@@ -1,3 +1,9 @@
+/*
+ * @Author: chris 
+ * @Date: 2018-05-31 19:59:22 
+ * @Last Modified by:   chris 
+ * @Last Modified time: 2018-05-31 19:59:22 
+ */
 //使用方法:  需要引入js-utils.js
 (function (window, document) {
 
