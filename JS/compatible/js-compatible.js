@@ -2,7 +2,7 @@
  * @Author: chris 
  * @Date: 2018-05-31 19:59:15 
  * @Last Modified by: chris
- * @Last Modified time: 2018-06-06 23:48:43
+ * @Last Modified time: 2018-06-18 23:41:31
  */
 (function (window, document) {
   window.tagsStr = 'html,head,body,title,meta,style,script,link,div,span,img,a,abbr,acronym,'
@@ -15,8 +15,12 @@
     + 'q,rp,rt,ruby,s,samp,section,select,small,source,strike,strong,sub,table,tbody,td,'
     + 'textarea,tfoot,th,thead,time,tr,track,tt,u,ul,var,video,wbr';
 
-  // 数组indexOf方法兼容
-  !Array.prototype.indexOf && (Array.prototype.indexOf = function (targetEle, fromIndex) {
+  var arrProto = Array.prototype;
+  var objProto = Object.prototype;
+
+  // 数组实例 indexOf方法兼容
+  !arrProto.indexOf && (arrProto.indexOf = function (targetEle, fromIndex) {
+    console.warn('使用的是Array.indexOf兼容版本');
     var k;
     if (this == null) {
       throw new TypeError('"this" is null or not defined');
@@ -43,21 +47,42 @@
     return -1;
   });
 
-  //  数组forEach方法兼容
-  !Array.prototype.forEach && (Array.prototype.forEach = function (callback) {
+  //  数组实例 forEach方法兼容
+  !arrProto.forEach && (arrProto.forEach = function (callback) {
+    console.warn('使用的是Array.forEach兼容版本');
     for (var i = 0; i < this.length; i++) {
       callback(this[i], i, this);
     }
   });
 
-  // 数组includes方法兼容
-  !Array.prototype.includes && (Array.prototype.includes = function (targetEle) {
-    return Array.prototype.indexOf.call(this, targetEle) > 0 ? true : false;
+  // 数组实例 includes方法兼容
+  !arrProto.includes && (arrProto.includes = function (targetEle) {
+    console.warn('使用的是Array.includes兼容版本');
+    return arrProto.indexOf.call(this, targetEle) > 0 ? true : false;
+  });
+
+  //数组Array.from方法兼容
+  !Array.from && (Array.from = function (param) {
+    console.warn('使用的是Array.from兼容版本');
+    return arrProto.slice.call(param);
+  });
+
+  //数组Array.of方法兼容
+  !Array.of && (Array.of = function () {
+    console.warn('使用的是Array.of兼容版本');
+    return Array.from(arguments);
+  });
+
+  //数组Array.isArray兼容
+  !Array.isArray && (Array.isArray = function (target) {
+    console.warn('使用的是Array.of兼容版本');
+    return objProto.toString.call(target) === '[object Array]' ? true : false;
   });
 
   //Object.keys兼容
   if (typeof Object.keys !== 'function') {
     Object.keys = function (targetObj) {
+      console.warn('使用的是Object.keys兼容版本');
       var temArr = [];
       for (var key in targetObj) {
         if (targetObj.hasOwnProperty(key)) {
@@ -71,9 +96,10 @@
   //Object.defineProerties兼容
   if (typeof Object.defineProerties !== 'function') {
     Object.defineProperties = function (obj, properties) {
+      console.warn('使用的是Object.defineProerties兼容版本');
       function convertToDescriptor (desc) {
         function hasProperty (obj, prop) {
-          return Object.prototype.hasOwnProperty.call(obj, prop);
+          return objProto.hasOwnProperty.call(obj, prop);
         }
 
         function isCallable (v) {
@@ -135,6 +161,7 @@
   //Object.create兼容
   if (typeof Object.create !== 'function') {
     Object.create = function (proto, propertiesObject) {
+      console.warn('使用的是Object.create兼容版本');
       if (typeof proto !== 'object' && typeof proto !== 'function') {
         throw new TypeError('Object prototype may only be an Object: ' + proto);
       }
@@ -152,6 +179,25 @@
     };
   }
 
+  //Object.assign 兼容
+  if (typeof Object.assign !== 'function') {
+    Object.assign = function (target, source1, source2) {
+      console.warn('使用的是Object.assign兼容版本，注意：该版本中，不包含操作目标对象的symbol属性')
+      var args = arguments;
+      var len = args.length;
+      if (len < 2) {
+        throw new TypeError('The function need at least two params');
+      }
+      // Object.keys(target)返回的是只包含可枚举的target自身的属性，不包含可枚举的Symbol属性。
+      // 但ES6标准Object.assign是包含操作对象的Symbol属性的。
+      for (var i = 1; i < len; i++) {
+        Object.keys(args[i]).forEach(function (item) {
+          target[item] = args[i][item];
+        })
+      }
+      return target;
+    }
+  }
 
   //bind兼容
   if (!Function.prototype.bind) {
@@ -162,7 +208,7 @@
         throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
       }
 
-      var aArgs = Array.prototype.slice.call(arguments, 1),
+      var aArgs = arrProto.slice.call(arguments, 1),
         fToBind = this,
         fNOP = function () { },
         fBound = function () {
@@ -170,7 +216,7 @@
             ? this
             : oThis,
             // 获取调用时(fBound)的传参.bind 返回的函数入参往往是这么传递的
-            aArgs.concat(Array.prototype.slice.call(arguments)));
+            aArgs.concat(arrProto.slice.call(arguments)));
         };
 
       // 维护原型关系
