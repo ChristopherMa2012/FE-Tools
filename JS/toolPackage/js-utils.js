@@ -3,7 +3,7 @@
  * @Author: chris 
  * @Date: 2018-05-31 19:49:36 
  * @Last Modified by: chris
- * @Last Modified time: 2018-06-12 21:51:33
+ * @Last Modified time: 2018-06-20 16:54:08
  */
 (function (window, document) {
 
@@ -125,7 +125,12 @@
       childrens.splice(childrens.indexOf(_self), 1);
       return childrens;
     },
-
+    //模拟点击事件
+    click:function(){
+      var event = document.createEvent('MouseEvents');
+      event.initMouseEvent('click',true,true,document.defaultView,0,0,0,0,0,false,false,false,false,0,null);
+      this.originDom.dispatchEvent(event);
+    }
   };
 
   //Dom选择器
