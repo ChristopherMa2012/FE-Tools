@@ -3,7 +3,7 @@
  * @Author: chris 
  * @Date: 2018-05-31 19:49:36 
  * @Last Modified by: chris
- * @Last Modified time: 2018-06-20 16:54:08
+ * @Last Modified time: 2018-07-10 11:51:06
  */
 (function (window, document) {
 
@@ -75,9 +75,9 @@
     insertBefore: function (newDom, referrenceDom) {
       newDom = isQueryObj(newDom) ? newDom.originDom : newDom;
       referrenceDom = isQueryObj(referrenceDom) ? referrenceDom.originDom : referrenceDom;
-      this.originDom.insertBefore(newDom,referrenceDom);
+      this.originDom.insertBefore(newDom, referrenceDom);
     },
-    appendChild: function(dom){
+    appendChild: function (dom) {
       this.originDom.appendChild(isQueryObj(dom) ? dom.originDom : dom);
     },
     //元素到文档顶部左侧的距离对象    
@@ -126,16 +126,16 @@
       return childrens;
     },
     //模拟点击事件
-    click:function(){
+    click: function () {
       var event = document.createEvent('MouseEvents');
-      event.initMouseEvent('click',true,true,document.defaultView,0,0,0,0,0,false,false,false,false,0,null);
+      event.initMouseEvent('click', true, true, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
       this.originDom.dispatchEvent(event);
     }
   };
 
   //Dom选择器
   window.$ = function (selector) {
-    if( typeof selector === 'object'){
+    if (typeof selector === 'object') {
       return new Query(selector);
     }
     var selectorArr = selector.split(' ');
@@ -175,5 +175,44 @@
     return newArr;
   };
 
+  window.isArray = function (target) {
+    return Object.prototype.toString.call(target) === "[object Array]"
+  }
+
+  window.isObject = function (target) {
+    return Object.prototype.toString.call(target) === "[object Object]"
+  }
+
+  window.isNull = function (target) {
+    return Object.prototype.toString.call(target) === "[object Null]";
+  }
+  
+  //深克隆
+  window.deepClone = function (source) {
+    var target;
+    if (typeof source[key] !== "object" || isNull(source[key])) return;
+    if (isObject(source)) {
+      target = {};
+      for (var key in source) {
+        if (!source.hasOwnProperty(key)) continue;
+        if (typeof source[key] !== "object" || isNull(source[key]) || typeof source[key] == 'function') {
+          target[key] = source[key];
+          continue;
+        }
+        target[key] = deepClone(source[key])
+      }
+    }
+    if (isArray(source)) {
+      target = [];
+      for (var i = 0; i < source.length; i++) {
+        if (typeof source[i] !== "object" || isNull(source[key]) || typeof source[key] == 'function') {
+          target[i] = source[i];
+          continue;
+        }
+        target[i] = deepClone(source[i])
+      }
+    }
+    return target;
+  }
 
 })(window, document);
